@@ -1,44 +1,32 @@
 const Pusher = require("pusher");
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const port = 5000
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
 
 const app = express();
-
-app.use(
-    express.json({
-        limit: "1024mb"
-    })
-)
-app.use(
-    express.urlencoded({
-        limit: "1024mb",
-        extended: true
-    })
-)
-
-
+app.set('PORT', process.env.PORT || 5000);
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-require("dotenv").config();
 
 const pusher = new Pusher({
-  appId: process.env.appId,
-  key: process.env.key,
-  secret: process.env.secret,
-  cluster: process.env.cluster,
-  encrypted: true,
-});
-
-app.post("/message", (req, res) => {
-  const payload = req.body;
-  pusher.trigger(req.query.channel, "message", payload);
-  res.send(payload);
+  appId: "1415946",
+  key: "dc26be17ccaceb24e6da",
+  secret: "7d3b547e4e661209c247",
+  cluster: "ap2",
+  useTLS: true
 });
 
 
-app.listen(port, () => {
-    console.log('my port is'+ ' ' + port)
-})
+app.post('/message', (req, res) => {
+    const payload = req.body;
+    console.log(payload)
+    pusher.trigger('message', 'message', payload);
+    res.send(payload)
+  });
+
+app.listen(app.get('PORT'), () =>
+  console.log('Listening at ' + app.get('PORT')))
+
+
