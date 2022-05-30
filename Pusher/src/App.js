@@ -38,7 +38,7 @@ class App extends Component {
         username: this.state.username,
         message: this.state.text
       };
-      axios.post('http://localhost:5000/message', payload);
+      axios.post('https://real-time-pusher-chat.herokuapp.com/message', payload);
     } else {
       this.setState({ text: e.target.value });
     }
