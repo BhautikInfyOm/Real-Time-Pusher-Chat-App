@@ -2,6 +2,7 @@ const Pusher = require("pusher");
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require("path");
 
 
 const app = express();
@@ -25,6 +26,25 @@ app.post('/message', (req, res) => {
     pusher.trigger('message', 'message', payload);
     res.send(payload)
   });
+
+
+    // --------------------------deployment------------------------------
+
+const __dirname1 = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1, "Pusher/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname1, "Pusher", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running..");
+  });
+}
+
+// --------------------------deployment end------------------------------
 
 app.listen(app.get('PORT'), () =>
   console.log('Listening at ' + app.get('PORT')))
